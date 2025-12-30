@@ -67,4 +67,4 @@ jobs:
       - name: Train final model
         run: |        
           export PYTHONPATH=$PYTHONPATH:$(pwd)
-          python train/train_experiment.py
+          python -m train/train_experiment.py
