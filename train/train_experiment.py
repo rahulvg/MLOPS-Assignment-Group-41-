@@ -57,7 +57,7 @@ def run_experiments():
                 metrics[f"{m}_mean"] = mean
                 metrics[f"{m}_std"] = std
                 print(f"{m.upper():10s} | Mean: {mean:.4f} | Std: {std:.4f}")
-            
+
             mlflow.log_param("model_type", "LogisticRegression")
             mlflow.log_param("C", C)
             mlflow.log_metrics(metrics)
@@ -101,16 +101,15 @@ def run_experiments():
             mlflow.log_metrics(metrics)
 
 
-
-
 def train_and_save_final_model():
     """
     Train the final Logistic Regression (C=0.1) model and
     save it to both MLflow and local disk.
     """
-    LOCAL_MODEL_DIR ="final_model"
+    LOCAL_MODEL_DIR = "final_model"
     os.makedirs(LOCAL_MODEL_DIR, exist_ok=True)
-    LOCAL_MODEL_PATH = os.path.join(LOCAL_MODEL_DIR, "heart_disease_lr_c01.pkl")
+    LOCAL_MODEL_PATH = os.path.join(
+        LOCAL_MODEL_DIR, "heart_disease_lr_c01.pkl")
     # -------------------------------
     # MLflow setup
     # -------------------------------
@@ -170,12 +169,11 @@ def train_and_save_final_model():
 if __name__ == "__main__":
     run_experiments()
 
-
     # Logistic Regression with C=0.1 was selected as the final model because it achieved
     # the highest recall with low variance during cross-validated experiments.
     # In a medical risk prediction task, recall is prioritized to minimize false negatives
     # (i.e., missing patients with heart disease). The stronger regularization (lower C)
-    # also improves generalization and model stability while retaining interpretability.
-
+    # also improves generalization and model stability while retaining
+    # interpretability.
 
     train_and_save_final_model()
