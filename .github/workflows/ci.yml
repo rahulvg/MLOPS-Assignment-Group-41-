@@ -47,6 +47,7 @@ jobs:
       - name: Run unit tests
         run: |
           mkdir -p reports
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
           pytest tests/ \
             --html=reports/pytest_report.html \
             --self-contained-html
@@ -65,4 +66,4 @@ jobs:
       # -------------------------------
       - name: Train final model
         run: |
-          python train/train.py
+          python train/train_experiment.py
