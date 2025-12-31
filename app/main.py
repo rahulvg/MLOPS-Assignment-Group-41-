@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import joblib
 import numpy as np
@@ -16,8 +16,16 @@ class PatientInput(BaseModel):
     features: list[float]
 
 
+EXPECTED_FEATURES = model.named_steps["clf"].coef_.shape[1]
+
 @app.post("/predict")
 def predict(input: PatientInput):
+    if len(input.features) != EXPECTED_FEATURES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Expected {EXPECTED_FEATURES} features, got {len(input.features)}"
+        )
+
     X = np.array(input.features).reshape(1, -1)
 
     prediction = int(model.predict(X)[0])
