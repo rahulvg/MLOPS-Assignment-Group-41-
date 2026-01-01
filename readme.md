@@ -164,7 +164,7 @@ MLflow was integrated to track:
 - Model artifacts  
 
 All experiments are logged under a dedicated MLflow experiment for easy comparison.
-![alt text](image-2.png)
+![alt text](screenshots/image-2.png)
 ---
 
 ###  Model Packaging and Reproducibility
@@ -180,7 +180,7 @@ All experiments are logged under a dedicated MLflow experiment for easy comparis
 ---
 ## 4. Architecture Diagram 
 
-![alt text](<architecture diagram.png>)
+![alt text](<screenshots/architecture diagram.png>)
 ---
 
 ## 5. CI/CD Pipeline
@@ -200,9 +200,9 @@ All experiments are logged under a dedicated MLflow experiment for easy comparis
 - Docker image build  
 - API smoke testing  
 
-![Github Action Dashboard](image-3.png)
+![Github Action Dashboard](screenshots/image-3.png)
 
-![Github Action  Steps ](image-4.png)
+![Github Action  Steps ](screenshots/image-4.png)
 ---
 
 ## 6. Code Repository
@@ -240,7 +240,7 @@ https://github.com/rahulvg/MLOPS-Assignment-Group-41-
 - Metrics include request count and request latency  
 - Ready for Prometheus and Grafana integration  
 
-![alt text](image-5.png)
+![alt text](screenshots/image-5.png)
 ---
 
 ## 8. Architecture Overview
@@ -256,7 +256,7 @@ CI/CD is handled using GitHub Actions, and experiment tracking is handled using 
 ---
 
 ## 9 Run using CURL/Postman API 
-![alt text](screenshots\image-6.png)
+![alt text](screenshots/image-6.png)
 ---
 
 ## Conclusion
