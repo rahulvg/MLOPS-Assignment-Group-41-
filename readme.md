@@ -73,14 +73,14 @@ Within the GitHub Actions workflow logs, the following evidence can be observed:
 ---
 
 ## Screenshot of successfull Docker run event
-![alt text](<Task 6 Docker.jpg>)
+![alt text](<screenshots/Task 6 Docker.jpg>)
 ---
 ### 1.3 Kubernetes (Local Deployment with Minikube)
 
 **Start Minikube**
 
     minikube start --container-runtime=containerd
-![alt text](image.png)
+![alt text](screenshots/image.png)
 **Build Docker Image Inside Minikube**
 
     minikube image build -t heart-disease-api .
@@ -93,7 +93,7 @@ Within the GitHub Actions workflow logs, the following evidence can be observed:
 **Expose Service**
 
     minikube service heart-disease-service
-![alt text](image-1.png)
+![alt text](screenshots/image-1.png)
 ---
 
 ## 2. Data Acquisition and Exploratory Data Analysis
