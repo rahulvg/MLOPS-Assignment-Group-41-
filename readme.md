@@ -1,235 +1,280 @@
-Heart Disease Prediction System – MLOps Report
+# Heart Disease Prediction System – MLOps
 
-Course: MLOps
-Assignment: End-to-End MLOps Pipeline
-Dataset: UCI Heart Disease Dataset
-Group: Group 41
-Repository: https://github.com/rahulvg/MLOPS-Assignment-Group-41-
+**Course:** MLOps  
+**Assignment:** End-to-End MLOps Pipeline  
+**Dataset:** UCI Heart Disease Dataset  
+**Group:** Group 41  
+**Repository:** https://github.com/rahulvg/MLOPS-Assignment-Group-41-
 
-1. Problem Statement
+---
 
-The objective of this project is to design, develop, and deploy a scalable and reproducible machine learning system to predict the risk of heart disease based on patient health attributes. The solution follows modern MLOps best practices including experiment tracking, CI/CD automation, containerization, Kubernetes deployment, and monitoring.
+##  Problem Statement
 
-2. Setup and Installation Instructions
-2.1 Local Environment
+The objective of this project is to design, develop, and deploy a scalable, reproducible, and production-ready machine learning system to predict the presence of heart disease based on patient health attributes.
 
-Python Version
-Python 3.10
+The solution follows modern MLOps best practices, including experiment tracking, CI/CD automation, containerization, Kubernetes deployment, and monitoring.
 
-Install Dependencies
+---
 
-pip install -r requirements.txt
+## 1. Setup and Installation Instructions
 
+### 1.1 Local Environment
 
-Launch MLflow UI
+**Python Version:** 3.10
 
-mlflow ui --backend-store-uri sqlite:///mlflow.db
+**Install Dependencies**
 
+    pip install -r requirements.txt
 
-Access:
+**Launch MLflow UI (Local SQLite DB)**
 
-http://localhost:5000
+    mlflow ui --backend-store-uri sqlite:///mlflow.db
 
-2.2 Kubernetes (Local Deployment)
+Access MLflow at:
 
-Start Minikube with containerd runtime:
+    http://localhost:5000
 
-minikube start --container-runtime=containerd
-
-
-Build Docker image inside Minikube:
-
-minikube image build -t heart-disease-api .
+---
+### 1.2 Verification of Docker Build and Execution via GitHub Actions
 
 
-Deploy application:
+Due to organizational restrictions that prevent local installation of Docker Desktop, the Docker image build and container execution were verified using **GitHub Actions**, which provides a Docker-enabled runner environment.
 
-kubectl apply -f k8s/deployment.yaml
-kubectl apply -f k8s/service.yaml
+This ensures that containerization and execution are **reproducible, verifiable, and independent of local system constraints**.
+
+---
 
 
-Expose service:
+1. Navigate to the GitHub repository:  
+   https://github.com/rahulvg/MLOPS-Assignment-Group-41-
 
-minikube service heart-disease-service
+2. Click on the **Actions** tab in the repository.
 
-3. Data Acquisition and Exploratory Data Analysis
-3.1 Dataset
+3. Select the most recent workflow run under the **CI pipeline**.
 
-Source: UCI Machine Learning Repository
+4. Open the workflow run and inspect the following steps:
 
-Format: CSV
+   - **Build Docker image**  
+     This step executes the Docker build command using the project’s `Dockerfile`.
 
-Target: Binary classification (presence or absence of heart disease)
+   - **Run Docker container and test API**  
+     This step starts the container and invokes the `/predict` endpoint using a sample JSON request.
 
-3.2 Preprocessing
+---
 
-Missing values handled
+## Evidence of Successful Docker Execution
 
-Numerical features scaled using StandardScaler
+Within the GitHub Actions workflow logs, the following evidence can be observed:
 
-Target variable encoded
+- Docker build logs confirming successful image creation  
+- Container startup logs indicating the FastAPI service is running  
+- Successful HTTP response from the `/predict` endpoint returning a prediction and confidence score  
 
-Preprocessing implemented using a pipeline for reproducibility
+---
 
-3.3 Exploratory Data Analysis
+## Screenshot of successfull Docker run event
+![alt text](<Task 6 Docker.jpg>)
+---
+### 1.3 Kubernetes (Local Deployment with Minikube)
 
-Feature distributions analyzed using histograms
+**Start Minikube**
 
-Correlation heatmap used to identify relationships between features
+    minikube start --container-runtime=containerd
+![alt text](image.png)
+**Build Docker Image Inside Minikube**
 
-Class balance verified
+    minikube image build -t heart-disease-api .
 
-4. Feature Engineering and Model Development
-4.1 Feature Pipeline
+**Deploy Application**
 
-A unified scikit-learn Pipeline was used:
+    kubectl apply -f k8s/deployment.yaml
+    kubectl apply -f k8s/service.yaml
 
-StandardScaler
+**Expose Service**
 
-Classifier
+    minikube service heart-disease-service
+![alt text](image-1.png)
+---
 
-This ensures identical preprocessing during training and inference.
+## 2. Data Acquisition and Exploratory Data Analysis
 
-4.2 Models Trained
-Model	Hyperparameters
-Logistic Regression	C ∈ {0.1, 1.0, 10.0}
-Random Forest	n_estimators ∈ {100, 200}, max_depth ∈ {None, 10}
-4.3 Evaluation Strategy
+### 2.1 Dataset
 
-5-fold cross-validation
+- Source: UCI Machine Learning Repository  
+- Format: CSV  
+- Task: Binary classification (presence or absence of heart disease)
 
-Metrics used:
+### 2.2 Preprocessing
 
-Accuracy
+- Missing values handled  
+- Numerical features scaled using StandardScaler  
+- Target variable encoded  
+- Preprocessing implemented using a scikit-learn Pipeline  
 
-Precision
+### 2.3 Exploratory Data Analysis (EDA) & Modelling choice
 
-Recall
+- Feature distributions analyzed using histograms  
+- Correlation heatmap used to study feature relationships  
+- Class balance verified  
 
-ROC-AUC
 
-4.4 Model Selection
 
-Selected Model: Logistic Regression (C = 0.1)
+The modelling approach was guided by dataset characteristics, interpretability needs, and deployment stability.
 
-Reasoning
+Two models were evaluated:
 
-Best balance between accuracy and recall
+- **Logistic Regression** – chosen as a strong, interpretable baseline for structured medical data  
+- **Random Forest** – included to capture non-linear relationships and feature interactions  
 
-Lower variance across folds
+All numerical features were standardized using **StandardScaler**, and preprocessing was implemented through a unified **scikit-learn Pipeline** to ensure reproducibility, prevent data leakage, and enable deployment-safe inference.
 
-Simpler and more interpretable
+#### Hyperparameter Tuning
+- Logistic Regression: `C ∈ {0.1, 1.0, 10.0}`
+- Random Forest:  
+  - `n_estimators ∈ {100, 200}`  
+  - `max_depth ∈ {None, 10}`  
 
-Stable and reliable for deployment
+Each configuration was logged as a separate experiment using **MLflow**.
 
-5. Experiment Tracking
+#### Evaluation
+Models were evaluated using **5-fold cross-validation** with the following metrics:
+- Accuracy
+- Precision
+- Recall
+- ROC-AUC
+
+#### Final Model
+**Logistic Regression with C = 0.1** was selected due to:
+- Consistent cross-validation performance
+- Lower variance across folds
+- Better generalization
+- Simpler and more interpretable behavior
+
+Its stability and ease of monitoring make it well-suited for a production-oriented MLOps pipeline.
+
+---
+
+
+## 3. Experiment Tracking
 
 MLflow was integrated to track:
 
-Model parameters
+- Model parameters  
+- Cross-validation metrics  
+- Model artifacts  
 
-Cross-validation metrics
+All experiments are logged under a dedicated MLflow experiment for easy comparison.
+![alt text](image-2.png)
+---
 
-Model artifacts
+###  Model Packaging and Reproducibility
 
-Experiments are logged under a dedicated MLflow experiment, enabling easy comparison across different model configurations.
+- Final model saved as a serialized scikit-learn Pipeline  
+- Model can be found at  **final_model\heart_disease_lr_c01.pkl** in git repo.
+- Preprocessing included within the model  
+- Reproducible inference guaranteed  
+- Dependencies listed in requirements.txt  
+- Artifacts stored and versioned using MLflow check **mlflow_experiment.db** in git repo 
 
-6. Model Packaging and Reproducibility
 
-Final model saved as a serialized scikit-learn Pipeline
+---
+## 4. Architecture Diagram 
 
-Preprocessing included within the model
+![alt text](<architecture diagram.png>)
+---
 
-Reproducible inference guaranteed
+## 5. CI/CD Pipeline
 
-Dependencies listed in requirements.txt
+### Tools Used
 
-Artifacts stored via MLflow
+- GitHub Actions  
+- Pytest  
+- Flake8  
+- Docker  
 
-7. CI/CD Pipeline
-7.1 Tools
+### Pipeline Stages
 
-GitHub Actions
+- Code linting  
+- Unit testing  
+- Model training  
+- Docker image build  
+- API smoke testing  
 
-Pytest
+![Github Action Dashboard](image-3.png)
 
-Flake8
+![Github Action  Steps ](image-4.png)
+---
 
-Docker
-
-7.2 Pipeline Stages
-
-Code linting
-
-Unit testing
-
-Model training
-
-Docker image build
-
-API smoke test
-
-Each workflow run logs execution details and artifacts.
-
-8. Containerization and Deployment
-8.1 Dockerized API
-
-FastAPI-based service
-
-/predict endpoint
-
-Accepts JSON input
-
-Returns prediction and confidence score
-
-8.2 Kubernetes Deployment
-
-Local Kubernetes using Minikube
-
-Deployment and NodePort Service manifests
-
-API successfully exposed and verified using curl and Postman
-
-9. Monitoring and Logging
-9.1 Logging
-
-Request-level logging implemented using FastAPI middleware
-
-Logs include endpoint, HTTP status, and latency
-
-Logs collected via Kubernetes pod logs
-
-9.2 Monitoring
-
-Prometheus-compatible /metrics endpoint exposed
-
-Metrics include request count and latency
-
-Enables integration with Prometheus and Grafana
-
-10. Architecture Overview
-
-High-level system architecture:
-
-Client (Postman / curl)
-→ FastAPI API (/predict, /metrics)
-→ Scikit-learn Pipeline
-→ Kubernetes Pod
-→ NodePort Service
-
-CI/CD and experiment tracking are handled using GitHub Actions and MLflow respectively.
-
-11. Code Repository
+## 6. Code Repository
 
 https://github.com/rahulvg/MLOPS-Assignment-Group-41-
 
-12. Conclusion
+## 7. Containerization and Deployment
 
-This project demonstrates a complete, production-style MLOps workflow covering data analysis, model development, experiment tracking, CI/CD automation, containerization, Kubernetes deployment, and monitoring. The system is reproducible, scalable, and aligned with real-world MLOps practices.
+### 7.1 Dockerized API
 
-Launch mlflow with local db file : mlflow ui --backend-store-uri sqlite:///E:/RGI3/MLOPS/mlflow.db
+- FastAPI-based service  
+- /predict endpoint  
+- Accepts JSON input  
+- Returns prediction and confidence score  
 
+### 7.2 Kubernetes Deployment
 
-minikube image build -t heart-disease-api .
-kubectl delete deployment heart-disease-api
-kubectl apply -f k8s/deployment.yaml
+- Local Kubernetes using Minikube  
+- Deployment and NodePort Service manifests  
+- API tested using curl and Postman  
+
+---
+
+## 7. Monitoring and Logging
+
+### 7.1 Logging
+
+- Request-level logging implemented via FastAPI middleware  
+- Logs include endpoint, HTTP status, and latency  
+- Logs accessible via Kubernetes pod logs  
+
+### 7.2 Monitoring
+
+- Prometheus-compatible /metrics endpoint exposed  
+- Metrics include request count and request latency  
+- Ready for Prometheus and Grafana integration  
+
+![alt text](image-5.png)
+---
+
+## 8. Architecture Overview
+
+Client (Postman / curl)  
+→ FastAPI API (/predict, /metrics)  
+→ Scikit-learn Pipeline  
+→ Kubernetes Pod  
+→ NodePort Service  
+
+CI/CD is handled using GitHub Actions, and experiment tracking is handled using MLflow.
+
+---
+
+## 9 Run using CURL/Postman API 
+![alt text](screenshots\image-6.png)
+---
+
+## Conclusion
+
+This project demonstrates a complete, production-grade MLOps workflow covering data analysis, model development, experiment tracking, CI/CD automation, containerization, Kubernetes deployment, and monitoring.
+
+The system is scalable, reproducible, and aligned with real-world MLOps practices.
+
+---
+
+## Appendix: Useful Commands
+
+**Launch MLflow with Custom Local DB**
+
+    mlflow ui --backend-store-uri sqlite:///E:/RGI3/MLOPS/mlflow.db
+
+**Rebuild and Redeploy on Minikube**
+
+    minikube image build -t heart-disease-api .
+    kubectl delete deployment heart-disease-api
+    kubectl apply -f k8s/deployment.yaml
