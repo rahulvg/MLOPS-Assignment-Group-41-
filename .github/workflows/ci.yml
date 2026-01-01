@@ -68,3 +68,15 @@ jobs:
         run: |
           export PYTHONPATH=$(pwd)
           python -m train.train_experiment
+
+      - name: Build Docker image
+        run: |
+          docker build -t heart-disease-api .
+
+      - name: Run Docker container (smoke test)
+        run: |
+          docker run -d -p 8000:8000 heart-disease-api
+          sleep 5
+          curl -X POST http://localhost:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{"features":[63,1,145,233,1,0,150,0,2.3,0,0,1,0,0,1,0,0,1]}'
