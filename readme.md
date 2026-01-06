@@ -26,6 +26,18 @@ The solution follows modern MLOps best practices, including experiment tracking,
 
     pip install -r requirements.txt
 
+**Run Training File(Runs experiment with different parameter on Logistics Regression and Random forest)** 
+
+    python train/train_experiment.py
+
+**Run all unit tests using Pytest**
+
+    pytest
+
+Create report using pytest
+
+    pytest --html=pytest_report.html
+
 **Launch MLflow UI (Local SQLite DB)**
 
     mlflow ui --backend-store-uri sqlite:///mlflow.db
@@ -256,6 +268,15 @@ CI/CD is handled using GitHub Actions, and experiment tracking is handled using 
 ---
 
 ## 9 Run using CURL/Postman API 
+
+Curl Command 
+
+    "curl -X POST http://127.0.0.1:30007/predict \
+    -H "Content-Type: application/json" \
+    -d '{"features":[63,1,145,233,1,0,150,0,2.3,0,0,1,0,0,1,0,0,1]}'"
+
+
+
 ![alt text](screenshots/image-6.png)
 ---
 
@@ -265,6 +286,9 @@ This project demonstrates a complete, production-grade MLOps workflow covering d
 
 The system is scalable, reproducible, and aligned with real-world MLOps practices.
 
+---
+## Demo video 
+https://github.com/rahulvg/MLOPS-Assignment-Group-41-/blob/main/Demo%20Video.mp4
 ---
 
 ## Appendix: Useful Commands
@@ -278,3 +302,4 @@ The system is scalable, reproducible, and aligned with real-world MLOps practice
     minikube image build -t heart-disease-api .
     kubectl delete deployment heart-disease-api
     kubectl apply -f k8s/deployment.yaml
+
