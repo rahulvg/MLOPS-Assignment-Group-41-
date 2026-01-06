@@ -289,6 +289,8 @@ The system is scalable, reproducible, and aligned with real-world MLOps practice
 ---
 ## Demo video 
 https://github.com/rahulvg/MLOPS-Assignment-Group-41-/blob/main/Demo%20Video.mp4
+
+https://drive.google.com/drive/folders/1hGcu4oyM3TusMy8vnackoOLpug7LhJdP?usp=sharing
 ---
 
 ## Appendix: Useful Commands
